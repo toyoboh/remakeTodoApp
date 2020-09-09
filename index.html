@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remake TodoApp</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <div id="app">
+
+    <h1>Todo App </h1>
+
+    <form class="main" @submit.prevent>
+      <p><input type="text" id="in-text" v-model="writeZone" placeholder="ここに追加したいタスクを入力してください" size="50"></p>
+      <p><button id="save" @click="register">登録</button></p>
+    </form>
+
+    <h3 id="count">終わっていないタスクが<strong>{{ totalTask }}個</strong>あります。</h3>
+
+    <div class="plass-area">
+      <ul id="list-box">
+        <li :class="{end: task.class1}" v-for="(task,index) in taskArray">
+          <p>{{ task.title }}</p>
+          <p>
+            <button :class="{complete: task.class2}" @click="endBtn(index)">完了</button>
+            <button @click="deleteBtn(index)">削除</button>
+          </p>
+        </li>
+      </ul>
+    </div><!-- .plass-area -->
+
+  </div>
+
+
+<script>
+  new Vue({
+    el: app,
+    data: {
+      writeZone: '',
+      taskArray: [],
+      newTask: null,
+      totalTask: 0,
+    },
+    methods: {
+      register() {
+        if(this.writeZone !== '') {
+          this.newTask = this.writeZone;
+          this.taskArray.push({
+              title: this.newTask,
+              class1: false,
+              class2: false,
+              totalCheck: true
+          });
+          this.writeZone = '';
+          this.newTask = null;
+
+          this.totalTask++;
+        }
+      },
+      endBtn(index) {
+        this.taskArray[index].class1 = !this.taskArray[index].class1;   //trueにする  liにclassをつけてopacityを.5にする
+        this.taskArray[index].class2 = !this.taskArray[index].class2;   //trueにする  完了buttonにclassをつけてdisplay noneにする
+        this.taskArray[index].totalCheck = !this.taskArray[index].totalCheck;   
+        
+        this.totalTask--;
+      },
+      deleteBtn(index) {
+        if(this.taskArray[index].totalCheck == true) {
+          this.totalTask--;
+        }
+
+        this.taskArray.splice(index, 1);
+      }
+    }
+  });
+</script>
+
+
+  
+</body>
+</html>
